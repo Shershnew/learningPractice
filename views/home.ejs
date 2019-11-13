@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Express handlebars</title>
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+
+        .my-articles{
+            border: solid black 1px;
+            padding: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .friends-articles{
+            border: solid black 1px;
+            padding: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .article{
+            border: solid gray 1px;
+            border-radius: 5px;
+            width: 200px;
+            height: 100px;
+            padding: 30px;
+            margin-right: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h2>My articles</h2>
+    <div class="my-articles">
+        <% myArticles.forEach((article) => { %>
+            <div class="article">
+                <h4>article</h4>
+                <p>
+                    <%= article.text%>
+                </p>
+            </div>
+        <%})%>
+    </div>
+
+    <h2>My friends articles</h2>
+        <% friends.forEach((man) => {%>
+            <h3>articles: <%=man.name%></h3>
+            <div class="friends-articles">
+                <% man.articles.forEach((article) => {%>
+                    <div class="article">
+                        <h4>article</h4>
+                        <p>
+                            <%= article.text%>
+                        </p>
+                    </div>
+                <%})%>
+            </div>
+        <%})%>
+</body>
+</html>
