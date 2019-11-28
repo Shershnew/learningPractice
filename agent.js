@@ -1,87 +1,141 @@
 const http = require('http');
+const fs = require('fs');
 
-const startFriendsAddress = ['127.0.0.1:5001','127.0.0.1:5002','127.0.0.1:5003'];
-
-class Article{
-  constructor(text = ''){
-    this.text = text;
+class Profile{
+  constructor(){
+    this.name = '';
+    this.surname = '';
+    this.patronymic = '';
+    this.photo = '';
+    this.about = '';
   }
 }
 
-class Man{
-  constructor(name){
-    this.name = name;
-    this.friendsAddress = [];
+class Article{
+  constructor(text = ''){
+    this.title = '';
+    this.text = text;
+    this.date = '';
+    this.keywords = '';
+  }
+}
+
+class BookRecord{
+  constructor(address){
+    this.address = address;
+    this.profile = new Profile();
     this.articles = [];
   }
 }
 
 class Book{
-  constructor() {
-    this.mans = {};
-    this.i = null;
+  constructor(myAddress) {
+    this.myAddress = myAddress;
+    this.bookRecords = {};
+    this.startInfo();
   }
 
   startInfo(){
-    startFriendsAddress.forEach((ip) => {
-      let tempMane = new Man(ip);
-      tempMane.friendsAddress = startFriendsAddress;
-      tempMane.articles.push(new Article('some text article'));
-      tempMane.articles.push(new Article('some text article2'));
-      this.mans[ip] = tempMane;
-    });
-
-    this.i = new Man;
-    this.i.articles.push(new Article('my article text'));
-    this.i.articles.push(new Article('some other my article'));
+    let bookRecords;
+    try{
+      bookRecords = JSON.parse(fs.readFileSync('data/bookRecords.json').toString());
+      this.bookRecords = bookRecords;
+      if(!this.bookRecords){
+        console.log('+++');
+        this.bookRecords = {};
+        this.bookRecords[this.myAddress] = new BookRecord(this.myAddress);
+        fs.writeFileSync('data/bookRecords.json', JSON.stringify(this.bookRecords));
+      }
+    } catch (e) {
+      console.log('book records not found');
+      this.bookRecords[this.myAddress] = new BookRecord(this.myAddress);
+      console.log(this.bookRecords);
+    }
   }
 
-}
+  saveRecords(){
+    fs.writeFileSync('data/bookRecords.json', JSON.stringify(this.bookRecords));
+  }
 
-function getArticles(ip, result) {
-    const options = {
-        hostname: ip.split(':')[0],
-        port: ip.split(':')[1],
-        path: '/article',
-        method: 'GET'
-    };
-
-    const req = http.request(options, res => {
-        res.on('data', d => {
-             result.articles = JSON.parse(d.toString());
-        })
-    });
-
-    req.on('error', error => {
-        // console.error(error);
-    });
-
-    req.end();
+  updateArticles = (address, articles) => {
+    if(this.bookRecords[address]){
+      this.bookRecords[address].articles = articles;
+    } else {
+      this.bookRecords[address] = new BookRecord(address);
+      this.bookRecords[address].articles = articles;
+    }
+  };
 
 }
 
 class Agent{
-  constructor(){
-    this.book = new Book();
-    this.book.startInfo();
+  constructor(myAddress){
+    this.myAddress = myAddress;
+    this.book = new Book(this.myAddress);
+    this.config = JSON.parse(fs.readFileSync('data/config.json').toString());
+    setInterval(this.updateFriendsArticles, 5000);
   }
 
-  updateArticle(ip){
-    getArticles(ip, this.book.mans[ip]);
+  addFriend(data){
+    this.book.bookRecords[data.address] = new BookRecord(data.address);
+    this.book.saveRecords();
   }
 
-  updateFriendsArticles(){
-    Object.keys(this.book.mans).forEach((ip) => {
-      this.updateArticle(ip);
+  delArticle(data){
+    console.log('del article', data);
+    this.book.bookRecords[this.myAddress].articles = this.book.bookRecords[this.myAddress].articles.filter((article) => (article.title !== data.title));
+    this.book.saveRecords();
+  }
+
+  addArticle(article){
+    const newArticle = new Article('');
+    newArticle.text = article.text;
+    newArticle.title = article.title;
+    newArticle.date = new Date();
+    this.book.bookRecords[this.myAddress].articles.push(newArticle);
+    this.book.saveRecords();
+  }
+
+  updateFriendsArticles = () => {
+    function getArticles(ip, insertResult) {
+      const options = {
+        hostname: ip.split(':')[0],
+        port: ip.split(':')[1],
+        path: '/articles',
+        method: 'GET'
+      };
+
+      const req = http.request(options, res => {
+        res.on('data', d => {
+          insertResult(ip, JSON.parse(d.toString()));
+        });
+      });
+
+      req.on('error', error => {});
+      req.end();
+    }
+
+    Object.keys(this.book.bookRecords).forEach((address) => {
+      if(address !== this.myAddress){
+        getArticles(address, this.book.updateArticles);
+      }
     });
-  }
+  };
 
   getMyArticles(){
-    return this.book.i.articles;
+    return this.book.bookRecords[this.myAddress].articles;
   }
 
-  getFriends(){
-    return Object.values(this.book.mans);
+  getFriendsArticles(){
+    return Object.values(this.book.bookRecords).filter(record => (record.address !== this.myAddress));
+  }
+
+  auth(password){
+    if(this.config.password === password){
+      return this.config.passkey;
+    } else {
+      return null;
+    }
   }
 }
 
