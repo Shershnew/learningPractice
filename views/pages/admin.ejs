@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>Express handlebars</title>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="admin.js"></script>
+</head>
+<body>
+    <%- include('../components/my-info', { book, myAddress} );%>
+    <%- include('../components/my-friends', { friendsAddresses, myAddress} );%>
+    <%- include('../components/my-articles', { myArticles} );%>
+    <%- include('../components/my-friends-articles', { friends} );%>
+</body>
+</html>

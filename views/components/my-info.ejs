@@ -1,0 +1,15 @@
+<div class="my-info">
+    <h2>My info</h2>
+    <div class="my-info-block">
+        <p>Фамилия:  <%= book.bookRecords[myAddress].profile.surname %> </p>
+        <p>Имя:  <%= book.bookRecords[myAddress].profile.name %> </p>
+        <p>Отчество:  <%= book.bookRecords[myAddress].profile.patronymic %> </p>
+        <p>Обо мне:</p>
+        <p><%= book.bookRecords[myAddress].profile.about %></p>
+    </div>
+    <h2>Photo:</h2>
+    <img src="<%= book.bookRecords[myAddress].profile.photo %>">
+    <a href="edit-my-info">
+        <button id="edit-my-info">Edit</button>
+    </a>
+</div>

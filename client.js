@@ -25,12 +25,12 @@ app.get('/articles', (request, response) => {
 });
 
 app.get('/login', (request, response) => {
-    response.render('login');
+    response.render('pages/login');
     response.end();
 });
 
 app.get('/admin', (request, response) => {
-    response.render('admin', {
+    response.render('pages/admin', {
         myArticles: mainAgent.getMyArticles(),
         friendsAddresses: Object.keys(mainAgent.book.bookRecords),
         friends: mainAgent.getFriendsArticles(),
@@ -40,16 +40,27 @@ app.get('/admin', (request, response) => {
 });
 
 app.get('/add-article', (request, response) => {
-    response.render('add-article');
+    response.render('pages/add-article');
 });
 
 app.get('/public', (request, response) => {
-    response.render('public', {
+    response.render('pages/public', {
         myArticles: mainAgent.getMyArticles(),
         friends: mainAgent.getFriendsArticles(),
         book: mainAgent.book,
         myAddress: mainAgent.myAddress
     });
+});
+
+app.get('/edit-my-info', (request, response) => {
+    response.render('pages/edit-my-info', {
+        profile: mainAgent.book.bookRecords[mainAgent.myAddress].profile
+    });
+});
+
+app.get('/edit-my-info-request', (request, response) => {
+    mainAgent.editMyInfo(url.parse(request.url, true).query);
+    response.redirect('/admin');
 });
 
 app.get('/add-article-request', (request, response) => {
@@ -59,6 +70,11 @@ app.get('/add-article-request', (request, response) => {
 
 app.get('/delete-article-request', (request, response) => {
     mainAgent.delArticle(url.parse(request.url, true).query);
+    response.redirect('/admin');
+});
+
+app.get('/delete-friend-request', (request, response) => {
+    mainAgent.delFriend(url.parse(request.url, true).query);
     response.redirect('/admin');
 });
 

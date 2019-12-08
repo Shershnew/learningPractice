@@ -36,20 +36,20 @@ class Book{
   }
 
   startInfo(){
+    this.bookRecords = {};
     let bookRecords;
     try{
       bookRecords = JSON.parse(fs.readFileSync('data/bookRecords.json').toString());
       this.bookRecords = bookRecords;
-      if(!this.bookRecords){
-        console.log('+++');
+      if(!this.bookRecords) {
         this.bookRecords = {};
+      }
+      if(!this.bookRecords[this.myAddress]){
         this.bookRecords[this.myAddress] = new BookRecord(this.myAddress);
-        fs.writeFileSync('data/bookRecords.json', JSON.stringify(this.bookRecords));
       }
     } catch (e) {
-      console.log('book records not found');
+      console.log('cannot read bookRecords.json');
       this.bookRecords[this.myAddress] = new BookRecord(this.myAddress);
-      console.log(this.bookRecords);
     }
   }
 
@@ -87,6 +87,23 @@ class Agent{
     this.book.saveRecords();
   }
 
+  delFriend(data){
+    console.log('del friend', data);
+    delete this.book.bookRecords[data.address];
+    this.book.saveRecords();
+  }
+
+  editMyInfo(data){
+    console.log('edit my info', data);
+    const profile = this.book.bookRecords[this.myAddress].profile;
+    profile.name = data.name;
+    profile.surname = data.surname;
+    profile.patronymic = data.patronymic;
+    profile.about = data.about;
+    profile.photo = data.photo;
+    this.book.saveRecords();
+  }
+
   addArticle(article){
     const newArticle = new Article('');
     newArticle.text = article.text;
@@ -98,6 +115,7 @@ class Agent{
 
   updateFriendsArticles = () => {
     function getArticles(ip, insertResult) {
+      console.log(ip);
       const options = {
         hostname: ip.split(':')[0],
         port: ip.split(':')[1],
@@ -105,14 +123,16 @@ class Agent{
         method: 'GET'
       };
 
-      const req = http.request(options, res => {
-        res.on('data', d => {
-          insertResult(ip, JSON.parse(d.toString()));
+      if(ip.split(':').length === 2){
+        const req = http.request(options, res => {
+          res.on('data', d => {
+            insertResult(ip, JSON.parse(d.toString()));
+          });
         });
-      });
 
-      req.on('error', error => {});
-      req.end();
+        req.on('error', error => {});
+        req.end();
+      }
     }
 
     Object.keys(this.book.bookRecords).forEach((address) => {

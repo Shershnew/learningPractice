@@ -1,0 +1,85 @@
+*{
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.my-info{
+    background-color: #ccc;
+    padding: 30px;
+}
+
+.my-friends{
+    background-color: #eee;
+    padding: 30px;
+}
+
+.my-articles{
+    background-color: #ccc;
+    padding: 30px;
+}
+
+.my-friends-articles{
+    background-color: #ccc;
+    padding: 30px;
+}
+
+.my-friends-articles h3{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.friend{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.delete-friend{
+    margin-left: 10px;
+}
+
+button{
+    height: 30px;
+    padding: 0 10px 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-friend-address{
+    margin: 5px;
+    height: 30px;
+}
+
+.my-articles-h{
+    margin-bottom: 20px;
+}
+
+#add-article{
+    margin-bottom: 20px;
+}
+
+.article{
+    padding: 20px;
+    background-color: #eee;
+    margin-bottom: 10px;
+}
+
+.article p{
+    margin-bottom: 10px;
+}
+
+.form-inputs{
+    background-color: #ccc;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-inputs *{
+    margin-bottom: 20px;
+    width: 400px;
+}

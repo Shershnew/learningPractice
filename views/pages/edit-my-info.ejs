@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Express handlebars</title>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<form action="edit-my-info-request" id="form">
+    <div class="form-inputs">
+        <h2>Фамилия:</h2>
+        <input name="surname" type="text" value="<%=profile.surname%>">
+        <h2>Имя:</h2>
+        <input name="name" type="text" value="<%=profile.name%>" >
+        <h2>Отчество:</h2>
+        <input name="patronymic" type="text" value="<%=profile.surname%>">
+        <h2>Обо мне</h2>
+        <textarea name="about" id="text" cols="30" rows="10"><%=profile.about%></textarea>
+        <h2>Картинка:</h2>
+        <input name="photo" type="text" value="<%=profile.photo%>">
+        <input id="edit-my-info-button" type="submit">
+    </div>
+</form>
+</body>
+</html>

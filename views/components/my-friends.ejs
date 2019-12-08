@@ -1,0 +1,13 @@
+<div class="my-friends">
+    <h2>friends addresses</h2>
+    <% friendsAddresses.filter((address) => (address !== myAddress)).forEach((address) => { %>
+        <div class="friend">
+            <p>
+                <%= address%>
+            </p>
+            <button class="delete-friend" name="<%=address%>">delete</button>
+        </div>
+    <%})%>
+    <input id="add-friend-address" type="text" name="address">
+    <button id="add-friend">Add friend</button>
+</div>

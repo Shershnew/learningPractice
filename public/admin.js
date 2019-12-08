@@ -12,6 +12,14 @@ window.onload = function () {
     }
   });
 
+  document.querySelectorAll('.delete-friend').forEach((button) => {
+    button.onclick = (e) => {
+      console.log('del-friend', button.name);
+      fetch('delete-friend-request?address='+button.name);
+      location.reload();
+    }
+  });
+
   document.querySelector('#add-friend').onclick = (e) => {
     const address = document.querySelector('#add-friend-address').value;
     fetch('add-friend?address='+address);

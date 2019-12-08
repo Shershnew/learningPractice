@@ -1,0 +1,21 @@
+<div class="my-friends-articles">
+    <h2>My friends articles</h2>
+    <% friends.forEach((record) => {%>
+    <h3>articles: <%=record.address%></h3>
+    <div class="friends-articles">
+        <% record.articles.forEach((article) => {%>
+            <div class="article">
+                <p>
+                    <%= article.title%>
+                </p>
+                <p>
+                    <%= article.text%>
+                </p>
+                <p>
+                    <%= article.date%>
+                </p>
+            </div>
+        <%})%>
+    </div>
+    <%})%>
+</div>

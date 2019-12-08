@@ -1,0 +1,20 @@
+<div class="my-articles">
+    <h2 class="my-articles-h">My articles</h2>
+    <a href="add-article">
+        <button id="add-article">add article</button>
+    </a>
+    <% myArticles.forEach((article) => { %>
+        <div class="article">
+            <p>
+                <%= article.title%>
+            </p>
+            <p>
+                <%= article.text%>
+            </p>
+            <p>
+                <%= article.date%>
+            </p>
+            <button class="delete-article" name="<%= article.title%>">delete</button>
+        </div>
+    <%})%>
+</div>
